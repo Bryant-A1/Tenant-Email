@@ -1,17 +1,18 @@
-'''
-Okay, here's a challenge:
-Write a script that reads in data from a text file and an xlsx file, then logs into my email and sends a bunch of emails.
+""" Okay, here's a challenge:
+Write a script that reads in data from a text file and an xlsx file, then logs
+into my email and sends a bunch of emails.
 1, 2, 3 go!
-Currently, this is using a TEST file so I don't send a bunch of emails to actual tenants.
+Currently, this is using a TEST file so I don't send a bunch of emails to
+actual tenants.
 
 The Excel Workbook is called 'test_ML.xlsx'
-'''
+"""
 # Going to need this package
 import openpyxl
 # THis package won't work for .ods files, so they have to be in the .xlsx format.
 print("Opening Workbook...")
 wb = openpyxl.load_workbook('test_ML.xlsx')
-#type(wb)
+# type(wb)
 # Self explanatory method
 #wb.get_sheet_names()
 
@@ -27,26 +28,44 @@ sheet = wb.get_sheet_by_name('Sheet1')
 # sheet.cell(row=1, column=2)
 
 # Let's create some empty lists so we can store tenant data.
-tenant_Name = []
+'''tenant_Name = []
 tenant_Property = []
 tenant_lease_end_date = []
 tenant_Email = []
+'''
 
-def get_Info(sheet, ls, r, c):
-    ''' Input the sheet (As a str), which list you want to append to, the row number (1), and column number
-    This function will grab all the information from the cells that you reference, and append the date into one of the lists above.
-    I should try and change this so I can reference the Column name with a string, instead of an index number'''
-    sheet = wb.get_sheet_by_name(sheet)
-    x = 2
+
+class Tenant(object):
+    """Tenant class used for clean iterative implementation."""
+
+    def __init__(self, Name, Property, LeaseEndDate, Email):
+        """Init Tenant class."""
+        self.Name = Name
+        self.Property = Property
+        self.LeaseEndDate = LeaseEndDate
+        self.Email = Email
+
+    def ReturnVals(self):
+        """Return values."""
+        return self.Name, self.Property, self.LeaseEndDate, self.Email
+
+
+Tenants = []
+
+def GetInfo():
     for i in range(1, sheet.max_row):
-        ls.append(sheet.cell(row = x, column = c).value)
-        x += 1
+        tName = sheet.cell(row=i, column=1)
+        tProp = sheet.cell(row=i, column=2)
+        tLease = sheet.cell(row=i, column=3)
+        tEmail = sheet.cell(row=i, column=4)
+        NewTenant = Tenant(tName, tProp, tLease, tEmail)
+        Tenants.append(NewTenant)
 
-get_Info('Sheet1', tenant_Name, 2, 1)
-get_Info('Sheet1', tenant_Property, 2, 3)
-get_Info('Sheet1', tenant_lease_end_date, 2, 5)
-get_Info('Sheet1', tenant_Email, 2, 6)
 
+GetInfo()
+print(Tenants)
+
+"""
 # Okay, next step, read in the data from the text file and use formatting to input these values.
 # How do I do this...
 
@@ -93,3 +112,4 @@ for email in tenant_Email:
     a += 1
 
 smtpObj.quit()
+"""
